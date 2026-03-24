@@ -1,0 +1,5 @@
+git clone https://github.com/PhonePe/pulse.git
+
+venv\Scripts\activate
+psql -U postgres -d phonepe_pulse
+

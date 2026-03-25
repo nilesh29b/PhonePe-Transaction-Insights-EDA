@@ -16,7 +16,7 @@ from sqlalchemy import create_engine
 # =============================================================
 
 DB_USER = "postgres"
-DB_PASSWORD = "1234"   # ← change this to your PostgreSQL password
+DB_PASSWORD = "1234"   
 DB_HOST = "localhost"
 DB_PORT = "5432"
 DB_NAME = "phonepe_pulse"
@@ -535,7 +535,7 @@ def load_to_db(df, table_name):
     Prints row count confirmation after loading.
     """
     df.to_sql(table_name, engine, if_exists="replace", index=False)
-    print(f"✅ {table_name}: {len(df)} rows loaded successfully")
+    print(f" {table_name}: {len(df)} rows loaded successfully")
 
 
 # =============================================================

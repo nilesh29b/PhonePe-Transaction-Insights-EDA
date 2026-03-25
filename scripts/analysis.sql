@@ -273,3 +273,70 @@ WHERE district IN (
 )
 GROUP BY year, district, state
 ORDER BY district, year;
+
+-- =====================================================
+-- Case Study 8 — User Registration Analysis
+-- =====================================================
+-- Case Study 8 - Query 1
+-- Goal: Find total registered users per state and
+--       their year over year growth
+-- Table used: aggregated_user
+-- registered_users column has cumulative users per
+-- state per quarter -- we take the latest value
+-- per state to avoid summing cumulative numbers
+-- =====================================================
+
+SELECT
+    state,
+    MAX(registered_users) AS peak_registered_users,
+    SUM(app_opens) AS total_app_opens,
+    ROUND(
+        (SUM(app_opens)::NUMERIC / NULLIF(MAX(registered_users), 0)),
+        2
+    ) AS opens_per_user
+FROM aggregated_user
+WHERE state != 'india'
+GROUP BY state
+ORDER BY peak_registered_users DESC
+LIMIT 10;
+
+-- =====================================================
+-- Case Study 8 - Query 2
+-- Goal: Find top 10 districts by registered users
+-- Table used: map_user
+-- map_user has district level registration data
+-- We use MAX for same reason as Query 1 --
+-- registered_users is cumulative not periodic
+-- =====================================================
+
+SELECT
+    state,
+    district,
+    MAX(registered_users) AS peak_registered_users,
+    SUM(app_opens) AS total_app_opens,
+    ROUND(
+        (SUM(app_opens)::NUMERIC / NULLIF(MAX(registered_users), 0)),
+        2
+    ) AS opens_per_user
+FROM map_user
+GROUP BY state, district
+ORDER BY peak_registered_users DESC
+LIMIT 10;
+
+-- =====================================================
+-- Case Study 8 - Query 3
+-- Goal: Find top 10 pin codes by registered users
+-- Table used: top_user
+-- top_user is the only table with pincode level
+-- user registration data
+-- =====================================================
+
+SELECT
+    state,
+    entity_name AS pincode,
+    SUM(registered_users) AS total_registered_users
+FROM top_user
+WHERE entity_type = 'pincode'
+GROUP BY state, entity_name
+ORDER BY total_registered_users DESC
+LIMIT 10;
